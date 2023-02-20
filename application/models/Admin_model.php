@@ -26,6 +26,11 @@ class Admin_model extends CI_Model
         return true;
     }
 
+    function checkProductImage($id_admin){  // untuk cek gambar
+        $query = $this->db->get_where('admin', ['id_admin' => $id_admin]);
+        return $query->row();
+    }
+
     function delete($kondisi)
     {
         $this->db->where($kondisi);

@@ -102,15 +102,29 @@ class Admin extends CI_Controller {
 
     function hapus($id_admin)
     {
-        $kondisi = array(
-            'id_admin' => $id_admin,
-        );
+        $gambar = new Admin_model; //membuat objek dari class model admin_model
 
-        $delete = $this->Admin_model->delete($kondisi);
-        if($delete){
-            redirect('Admin','refresh');
-        }else{
-            echo 'Data gagal Disimpan';
+        if($gambar->checkProductImage($id_admin)){ //Kondisi pengecekan Gambar
+            $data = $gambar->checkProductImage($id_admin); // Pengambilan data gambar
+            // $data->foto_admin; >>>>  Pengambilan data nama gambar sesuai id yang dipilih
+            if (file_exists("./assets/foto_admin/".$data->foto_admin)) {
+                unlink("./assets/foto_admin/".$data->foto_admin); //fungsi unlink untuk menghapus gambar yang tersimpan di local
+            }
+
+            $kondisi = array(
+                'id_admin' => $id_admin,
+            );
+    
+            $delete = $this->Admin_model->delete($kondisi); //untuk menghapus data yang ada di tabel admin
+            $this->session->set_flashdata('status','Data berhasil di hapus');            
+            if($delete){
+                redirect('Admin','refresh');
+            }else{
+                echo 'Data gagal Disimpan';
+            }
+           
         }
+
+       
     }
 }
